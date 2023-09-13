@@ -1,0 +1,17 @@
+import bs4 as beauty
+import os
+import requests
+os.makedirs("demo-comics",exist_ok=True)
+starting_url="https://xkcd.com/"
+count=10
+for comic_number in range(count):
+    image_url=f"{starting_url}{comic_number}/"
+    page_data=requests.get(image_url)
+    parser_obj=beauty.BeautifulSoup(page_data.text,"html.parser")
+    css_element=parser_obj.select_one("#comic img")
+    if(css_element):
+
+        comic_url="https:"+css_element['src']
+        res=requests.get(comic_url)
+        with open("demo-comics/comix-{}.png".format(comic_number),"wb") as file:
+            file.write(res.content)
